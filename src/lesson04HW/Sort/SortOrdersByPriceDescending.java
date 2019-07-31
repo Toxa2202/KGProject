@@ -12,6 +12,6 @@ import static lesson04HW.Main.getPriceOfSoldGoodsInOrder;
 public class SortOrdersByPriceDescending implements Comparator<Order> {
     @Override
     public int compare(Order o1, Order o2) {
-        return getPriceOfSoldGoodsInOrder(o2) - getPriceOfSoldGoodsInOrder(o1);
+        return getPriceOfSoldGoodsInOrder(o2).intValue() - getPriceOfSoldGoodsInOrder(o1).intValue();
     }
 }

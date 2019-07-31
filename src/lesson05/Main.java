@@ -43,3 +43,5 @@ public class Main {
 /** Dodaty sortuvannja zamovlenj po cini v rizni storony
  * Dodaty sortuvannja tovariv po nazvi ta cini z vyborom potribnogo sposobu sortuvannja*/
 
+
+// hashcode peredajetjsia v hashFunc

@@ -17,6 +17,9 @@ public class Main {
     static List<Employee> employees = new ArrayList<>();
     static List<Order> orders = new ArrayList<>();
     static List<TotalOrder> totalOrders = new ArrayList<>();
+
+
+
     private static String currentClientName;
     private static Integer currentClientId;
     private static String userLogin = "", userPassword = "";
@@ -441,9 +444,14 @@ public class Main {
         orders.add(new Order(4, 4, "15.04.2018", new Integer[]{4, 4}, false));
         orders.add(new Order(5, 5, "07.01.2019", new Integer[]{6, 9, 11}, false));
 
+
+        /** Test Lesson 06 */
+        Map<Person, Order> orderMap = new HashMap<>();
+//        orderMap.put(new Person())
     }
 }
 
+// HomeWork04
 // Зробити інтернет магазин, товар, каса, юзери можуть шось купити.
 // Товар має мати свою кількість і зменшується при купівлі.
 // Можна подивитись шо купили юзери. Має бути адмін. Все через консоль
