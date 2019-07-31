@@ -1,5 +1,9 @@
 package lesson04HW;
 
+import lesson04HW.Sort.SortGoodsByModel;
+import lesson04HW.Sort.SortGoodsByPrice;
+import lesson04HW.Sort.SortOrdersByPriceAscending;
+import lesson04HW.Sort.SortOrdersByPriceDescending;
 import lesson04HW.model.*;
 import java.util.*;
 
@@ -59,9 +63,9 @@ public class Main {
             }
             // choice 1
             if (clientChoice == 1) {
-                for (Good good : goods) {
-                    System.out.println(good);
-                }
+                /** Goods Sorting Method */
+                goodsSorting(input);
+
                 System.out.println("\t- To Add/Remove goods from your basket, press '2';" +
                         "\n\t- To make a pay, press '3'." +
                         "\n\t- To EXIT, press '0'.");
@@ -106,7 +110,7 @@ public class Main {
                         break;
                     }
                     System.out.println("Your new wish list is: ");
-                    System.out.println(getOrderDetailsByClientId(currentClientId + 1));
+                    System.out.println(getOrderDetailsByClientId(currentClientId));
                     System.out.println("To make payment, press '3' OR '0' to EXIT: ");
 
                 } else if (clientChoice == 0) {
@@ -116,13 +120,15 @@ public class Main {
             // choice 3
             } else if (clientChoice == 3) {
                 System.out.println("Your new wish list is: ");
-                System.out.println(getOrderDetailsByClientId(currentClientId + 1));
-                System.out.println(orders.get(currentClientId));
+                System.out.println(getOrderDetailsByClientId(currentClientId));
+                // From Zero...
+                System.out.println(orders.get(currentClientId - 1));
                 System.out.println("To make a purchase, press '1' OR '0' to EXIT: ");
                 clientChoice = input.nextInt();
                 if (clientChoice == 1) {
-                    orders.get(currentClientId).setComplete(true);
-                    System.out.println("Total price is " + getPriceOfSoldGoodsInOrder(orders.get(currentClientId - 1))); // todo na zavtra
+                    orders.get(currentClientId - 1).setComplete(true);
+                    // From Zero...
+                    System.out.println("Total price is " + getPriceOfSoldGoodsInOrder(orders.get(currentClientId - 1)));
                     System.out.println("Thank you. Have a nice day!");
                     System.out.println("To login as Administrator, press '1'" +
                             "\nTo login as Client, press '2'," +
@@ -151,12 +157,21 @@ public class Main {
                 "\n\t- To change Good, press '2';" +
                 "\n\t- To Exit, press '0'.");
         Integer administratorChoice = input.nextInt();
+        /** Choose 1 */
         if (administratorChoice.equals(1)) {
             Boolean isCompleteOrder = false;
+            System.out.println("To sort Orders by Ascending price, press '1'," +
+                    "\nTo sort Orders by Descending price, press '2': ");
+            int sortChoose = input.nextInt();
+            if (sortChoose == 1) {
+                Collections.sort(orders, new SortOrdersByPriceAscending());
+            } else if (sortChoose == 2) {
+                Collections.sort(orders, new SortOrdersByPriceDescending());
+            }
             for (Order order : orders) {
                 if (order.isComplete()){
                     isCompleteOrder = true;
-                    System.out.println("Order " + order.getId() +
+                    System.out.println("Order " + (order.getId()) +
                             ". Client " + getClientNameById(order.getClientID()) +
                             ". Date of order " + order.getDateOfOrder());
                 }
@@ -174,7 +189,7 @@ public class Main {
                     }
                     // For get order details
                     for (Order order : orders) {
-                        if (order.getId().equals(userInput)) {
+                        if (userInput.equals(order.getId())) {
                             System.out.println(getOrderDetailsByClientId(userInput));
                         }
                     }
@@ -190,11 +205,11 @@ public class Main {
                 System.exit(1);
             }
 
-
+        /** Choose 2 */
         } else if (administratorChoice.equals(2)) {
-            for (Good good : goods) {
-                System.out.println(good);
-            }
+            /** Sorting Goods Method */
+            goodsSorting(input);
+
             System.out.println("\nTo add new position, press '1': ");
             System.out.println("To delete a position, press '2': ");
             Integer userInput = input.nextInt();
@@ -263,6 +278,28 @@ public class Main {
         }
     }
 
+    private static void goodsSorting(Scanner input) {
+        System.out.println("To sort Goods by ID, press '1', " +
+                "\nTo sort Goods by Price, press '2', " +
+                "\nTo sort Goods by Model, press '3': ");
+        int sortChoose = input.nextInt();
+        if (sortChoose == 1) {
+            for (Good good : goods) {
+                System.out.println(good);
+            }
+        } else if (sortChoose == 2) {
+            Collections.sort(goods, new SortGoodsByPrice());
+            for (Good good : goods) {
+                System.out.println(good);
+            }
+        } else if (sortChoose == 3) {
+            Collections.sort(goods, new SortGoodsByModel());
+            for (Good good : goods) {
+                System.out.println(good);
+            }
+        }
+    }
+
 //    private static Order getDateOfOrder(Integer id) {
 //        Order current = null;
 //        for (Order order : orders) {
@@ -282,7 +319,7 @@ public class Main {
     }
 
     /** Method return total price of goods in every order */
-    private static Integer getPriceOfSoldGoodsInOrder(Order order) {
+    public static Integer getPriceOfSoldGoodsInOrder(Order order) {
         Integer price = 0;
         for (Integer goodId : order.getSoldGoods()) {
             Good good = getGoodById(goodId);

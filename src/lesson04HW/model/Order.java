@@ -1,6 +1,7 @@
 package lesson04HW.model;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Created by anton.sviatov on 25.07.2019.
@@ -69,4 +70,25 @@ public class Order {
     public void setComplete(boolean complete) {
         isComplete = complete;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return isComplete == order.isComplete &&
+                Objects.equals(id, order.id) &&
+                Objects.equals(clientID, order.clientID) &&
+                Objects.equals(dateOfOrder, order.dateOfOrder) &&
+                Arrays.equals(soldGoods, order.soldGoods);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, clientID, dateOfOrder, isComplete);
+        result = 31 * result + Arrays.hashCode(soldGoods);
+        return result;
+    }
+
+
 }

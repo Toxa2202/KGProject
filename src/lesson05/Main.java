@@ -29,7 +29,7 @@ public class Main {
         people.add(new Person("Andrii", 24));
         people.add(new Person("Vova", 23));
         people.add(new Person("Misha", 22));
-//        people.sort(new SortByName());
+//        people.sort(new SortGoodsByModel());
         Collections.sort(people, new SortByName().thenComparing(new SortByAge()));
         System.out.println(people);
     }
@@ -39,5 +39,7 @@ public class Main {
 // Class Comparable
 
 //Set vdoma - key zanosymo, zna4ennya avtomatom
-// HW - Zrobyby sort zamovlenj po summi tovariv po nazvi, po sumi, tovary po imeni i po cini.
+// HW - Zrobyty sort zamovlenj po kilkosti tovariv, po nazvi, po sumi; tovary po imeni i po cini.
+/** Dodaty sortuvannja zamovlenj po cini v rizni storony
+ * Dodaty sortuvannja tovariv po nazvi ta cini z vyborom potribnogo sposobu sortuvannja*/
 

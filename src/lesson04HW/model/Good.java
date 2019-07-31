@@ -1,5 +1,7 @@
 package lesson04HW.model;
 
+import java.util.Objects;
+
 /**
  * Created by anton.sviatov on 24.07.2019.
  */
@@ -77,5 +79,23 @@ public class Good {
                 ", price= " + price +
                 ", quantity= " + quantity +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Good good = (Good) o;
+        return Objects.equals(id, good.id) &&
+                Objects.equals(name, good.name) &&
+                Objects.equals(model, good.model) &&
+                Objects.equals(price, good.price) &&
+                Objects.equals(quantity, good.quantity) &&
+                typeOfGoods == good.typeOfGoods;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, model, price, quantity, typeOfGoods);
     }
 }

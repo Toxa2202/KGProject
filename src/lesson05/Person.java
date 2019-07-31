@@ -60,7 +60,6 @@ public class Person implements Comparable<Person>{
         } else if (this.age.compareTo(o.age) == 0) {
             return 0;
         }
-
         return this.name.compareTo(o.name);
 
         /** To compare int */
