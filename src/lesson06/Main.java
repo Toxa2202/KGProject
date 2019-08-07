@@ -13,9 +13,9 @@ public class Main {
         people.put(new Person("Ostap", 18), 4);
         people.put(new Person("Svitlana", 20), 3);
 
-//        for (Map.Entry entry : people.entrySet()) {
-//            System.out.println(entry.getKey() + " -> " + entry.getValue());
-//        }
+        for (Map.Entry entry : people.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
 
 //        for (Person person : people.keySet()) {
 //            System.out.println(person + " -> " + people.get(person));
@@ -45,6 +45,8 @@ public class Main {
 // Comparator - можна переставляти стилі сортування
 
 /** HomeWork06 */
+/** Перебудувати консольний магазин таким чином, щоб в кожного користувача був свій кошик
+ * і кожен був пов"язаний з власним кошиком через мапу і весь функціонал зберігсяю */
 // За допомогою Map звязати Person і кошик (TotalOrders). Ключ це Person, значення - TotalOrders
 // user mapa , user koshyk, user = key, коли логіниться,
 // підтягується його мапа (юзер це ключ)

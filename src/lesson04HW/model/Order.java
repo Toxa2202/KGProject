@@ -89,6 +89,4 @@ public class Order {
         result = 31 * result + Arrays.hashCode(soldGoods);
         return result;
     }
-
-
 }

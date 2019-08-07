@@ -5,6 +5,7 @@ import lesson04HW.Sort.SortGoodsByPrice;
 import lesson04HW.Sort.SortOrdersByPriceAscending;
 import lesson04HW.Sort.SortOrdersByPriceDescending;
 import lesson04HW.model.*;
+
 import java.util.*;
 
 /**
@@ -15,50 +16,54 @@ public class Main {
     static List<Good> goods = new ArrayList<>();
     static List<Client> clients = new ArrayList<>();
     static List<Employee> employees = new ArrayList<>();
-    static List<Order> orders = new ArrayList<>();
+    public static List<Order> orders = new ArrayList<>();
     static List<TotalOrder> totalOrders = new ArrayList<>();
-
-
+    public static Map<Integer, Order> clientBasket = new HashMap<>();
 
     private static String currentClientName;
     private static Integer currentClientId;
     private static String userLogin = "", userPassword = "";
+    private static int userInput;
 
-
+    /** Main method */
     public static void main(String[] args) {
         boolean isCorrectLogin = false;
         boolean isCorrectPassword = false;
         Scanner input = new Scanner(System.in);
         initData();
+        addToMap(orders);
 
-//        String goodsInfo =
-//                String.format("Total count of sold goods %d with price %f",
-//                getCountOfSoldGoods(), getAllPriceOfSoldGoods());
-//        System.out.println(goodsInfo);
+        do {
+            System.out.println("Welcome!" +
+                    "\n\t- To login as Administrator, press '1';" +
+                    "\n\t- To login as Client, press '2'.");
+            userInput = input.nextInt();
 
-        System.out.println("Welcome!" +
-                "\n\t- To login as Administrator, press '1';" +
-                "\n\t- To login as Client, press '2'.");
-        int userInput = input.nextInt();
+            switch (userInput) {
+                case 1:
+                    System.out.println("Option '1' selected.");
+                    adminActions(input);
+                    break;
+                case 2:
+                    System.out.println("Option '2' selected.");
+                    clientActions(isCorrectLogin, isCorrectPassword, input);
+                    break;
+            }
+        } while (userInput == 1 || userInput == 2);
 
-        if (userInput == 1) {
-            adminActions(input);
-        } else if (userInput == 2) {
-            clientActions(isCorrectLogin, isCorrectPassword, input);
-        } else {
-            System.out.println("Incorrect choice. Program is close...");
-        }
+        System.out.println("Incorrect choice. Program is closing...");
     }
 
-    /** Method do actions, if Client was connect */
+
+    /** Method operate with actions, if Client was connect ------------------------*/
     private static void clientActions(boolean isCorrectLogin, boolean isCorrectPassword, Scanner input) {
         System.out.println("Client access.");
 
         clientSecurityCheck(isCorrectLogin, isCorrectPassword, input);
         System.out.println("\t- To view our goods, press '1';" +
-                "\n\t- To Add/Remove goods from your basket, press '2';" +
-                "\n\t- To make a pay, press '3';" +
-                "\n\t- To EXIT, press '0'.");
+                            "\n\t- To Add/Remove goods from your basket, press '2';" +
+                            "\n\t- To make a pay, press '3';" +
+                            "\n\t- To EXIT, press '0'.");
         while (true){
             Integer clientChoice = input.nextInt();
             if (clientChoice == 0) {
@@ -70,8 +75,8 @@ public class Main {
                 goodsSorting(input);
 
                 System.out.println("\t- To Add/Remove goods from your basket, press '2';" +
-                        "\n\t- To make a pay, press '3'." +
-                        "\n\t- To EXIT, press '0'.");
+                                    "\n\t- To make a pay, press '3'." +
+                                    "\n\t- To EXIT, press '0'.");
 
                 if (clientChoice == 0) {
                     System.exit(1);
@@ -83,59 +88,64 @@ public class Main {
                 if (clientChoice == 1) {
                     System.out.println("Enter ID of position to add to wish list: ");
                     clientChoice = input.nextInt();
-                    Integer lengthArray = orders.get(currentClientId).getSoldGoods().length + 1;
+
+                    // Add new position to the client order (Integer position --> -1)
+                    Integer lengthArray = clientBasket.get(currentClientId).getSoldGoods().length + 1;
                     Integer[] soldGoodsNew = new Integer[lengthArray];
-                    Integer[] soldGoodsOld = orders.get(currentClientId).getSoldGoods();
+                    Integer[] soldGoodsOld = clientBasket.get(currentClientId).getSoldGoods();
                     for (int i = 0; i < soldGoodsOld.length; i++) {
                         soldGoodsNew[i] = soldGoodsOld[i];
                     }
                     soldGoodsNew[soldGoodsNew.length - 1] = clientChoice;
                     // Update client order
-                    orders.get(currentClientId).setSoldGoods(soldGoodsNew);
+                    clientBasket.get(currentClientId).setSoldGoods(soldGoodsNew);
                     System.out.println("Your new wish list is: ");
-                    System.out.println(getOrderDetailsByClientId(currentClientId + 1));
+                    System.out.println(getOrderDetailsByClientId(currentClientId));
 
                 } else if (clientChoice == 2) {
                     System.out.println("Your wish list is: ");
-                    System.out.println(getOrderDetailsByClientId(currentClientId + 1));
+                    System.out.println(getOrderDetailsByClientId(currentClientId));
                     System.out.println("Enter ID of position to remove from wish list: ");
                     while (true){
                         clientChoice = input.nextInt();
-                        Integer[] soldGoodsOld = orders.get(currentClientId).getSoldGoods();
+                        Integer[] soldGoodsOld = clientBasket.get(currentClientId).getSoldGoods();
                         if (clientChoice > soldGoodsOld.length) {
                             System.out.println("Wrong ID. Try again...");
                         }
                         for (int i = 0; i < soldGoodsOld.length; i++) {
                             if (soldGoodsOld[i] == clientChoice) {
                                 soldGoodsOld[i] = null;
+                                clientBasket.remove(soldGoodsOld[i]);
                             }
                         }
                         break;
                     }
                     System.out.println("Your new wish list is: ");
                     System.out.println(getOrderDetailsByClientId(currentClientId));
-                    System.out.println("To make payment, press '3' OR '0' to EXIT: ");
+                    System.out.println("- To Add new position, press '1';" +
+                                        "\n- To Delete position, Press '2';" +
+                                        "\n- To make payment, press '3' OR '0' to EXIT: ");
 
                 } else if (clientChoice == 0) {
                     System.exit(1);
                 }
 
-            // choice 3
+                // choice 3
             } else if (clientChoice == 3) {
                 System.out.println("Your new wish list is: ");
                 System.out.println(getOrderDetailsByClientId(currentClientId));
                 // From Zero...
-                System.out.println(orders.get(currentClientId - 1));
+                System.out.println(clientBasket.get(currentClientId));
                 System.out.println("To make a purchase, press '1' OR '0' to EXIT: ");
                 clientChoice = input.nextInt();
                 if (clientChoice == 1) {
-                    orders.get(currentClientId - 1).setComplete(true);
+                    clientBasket.get(currentClientId).setComplete(true);
                     // From Zero...
-                    System.out.println("Total price is " + getPriceOfSoldGoodsInOrder(orders.get(currentClientId - 1)));
+                    System.out.println("Total price is " + getPriceOfSoldGoodsInOrder(clientBasket.get(currentClientId)));
                     System.out.println("Thank you. Have a nice day!");
                     System.out.println("To login as Administrator, press '1'" +
-                            "\nTo login as Client, press '2'," +
-                            "\nTo Exit, press '0': ");
+                                     "\nTo login as Client, press '2'," +
+                                     "\nTo Exit, press '0': ");
                     clientChoice = input.nextInt();
                     if (clientChoice == 1) {
                         adminActions(input);
@@ -153,26 +163,33 @@ public class Main {
         }
     }
 
-    /** Method do actions, if Administrator was connect */
+    /** Method operate with actions, if Administrator was connect --------------------------*/
     private static void adminActions(Scanner input) {
         System.out.println("Administrator access. " +
-                "\n\t- To see Orders, press '1';" +
-                "\n\t- To change Good, press '2';" +
-                "\n\t- To Exit, press '0'.");
+                        "\n\t- To see Orders, press '1';" +
+                        "\n\t- To change Good, press '2';" +
+                        "\n\t- To Exit, press '0'.");
         Integer administratorChoice = input.nextInt();
         /** Choose 1 */
         if (administratorChoice.equals(1)) {
             Boolean isCompleteOrder = false;
             System.out.println("To sort Orders by Ascending price, press '1'," +
-                    "\nTo sort Orders by Descending price, press '2': ");
+                            "\nTo sort Orders by Descending price, press '2': ");
             int sortChoose = input.nextInt();
             if (sortChoose == 1) {
+//                List list = new ArrayList(clientBasket.entrySet());
+//                Collections.sort(list, new Comparator<Map.Entry<Integer, Order>>() {
+//                    @Override
+//                    public int compare(Map.Entry<Integer, Order> o1, Map.Entry<Integer, Order> o2) {
+//                        return o1.getValue() - o2.getValue();
+//                    }
+//                });
                 Collections.sort(orders, new SortOrdersByPriceAscending());
             } else if (sortChoose == 2) {
                 Collections.sort(orders, new SortOrdersByPriceDescending());
             }
-            for (Order order : orders) {
-                if (order.isComplete()){
+            for (Order order : clientBasket.values()) {
+                if (order.isComplete()) {
                     isCompleteOrder = true;
                     System.out.println("Order " + (order.getId()) +
                             ". Client " + getClientNameById(order.getClientID()) +
@@ -187,11 +204,11 @@ public class Main {
                     if (userInput == 0) {
                         System.exit(1);
                         // if different number of order
-                    } else if (userInput > (orders.size())) {
-                        System.out.println("Order does not exist! Exiting...");
+                    } else if (userInput > (clientBasket.size())) {
+                        System.out.println("Order does not exist! Try again...");
                     }
                     // For get order details
-                    for (Order order : orders) {
+                    for (Order order : clientBasket.values()) {
                         if (userInput.equals(order.getId())) {
                             System.out.println(getOrderDetailsByClientId(userInput));
                         }
@@ -208,7 +225,7 @@ public class Main {
                 System.exit(1);
             }
 
-        /** Choose 2 */
+            /** Choose 2 */
         } else if (administratorChoice.equals(2)) {
             /** Sorting Goods Method */
             goodsSorting(input);
@@ -239,7 +256,7 @@ public class Main {
 //                        "\n\t\tTypeOfGoods.PRINTER - type of device (or SMARTPHONE, MONITOR, LAPTOP.)");
 //                String userCommand = input.nextLine();
 //                goods.add(new Good(Arrays.asList(userCommand)));
-                    System.exit(1);
+
                     // To delete a position
                 } else if (userInput == 2) {
                     System.out.println("\nTo delete a position, enter a number of it's ID: ");
@@ -247,9 +264,9 @@ public class Main {
                     if (userInput > goods.size()) {
                         System.out.println("This ID does not exist. Exiting...");
                     } else {
-                        System.out.println(goods.get(userInput - 1) + " is removed!");
+                        System.out.println(getGoodById(userInput) + " is removed!");
                         /** Removed with ITERATOR */
-                        for (Iterator<Good> iterator = goods.listIterator(); iterator.hasNext(); ) {
+                        for (Iterator<Good> iterator = goods.listIterator(); iterator.hasNext();) {
                             Good good = iterator.next();
                             if (good.getId().equals(userInput)) {
                                 iterator.remove();
@@ -312,16 +329,20 @@ public class Main {
 //        }
 //    }
 
-    /** Method return total price of goods in all orders*/
+    /**
+     * Method return total price of goods in all orders
+     */
     private static Double getAllPriceOfSoldGoods() {
         Double price = 0.0;
-        for (Order order : orders) {
+        for (Order order : clientBasket.values()) {
             price += getPriceOfSoldGoodsInOrder(order);
         }
         return price;
     }
 
-    /** Method return total price of goods in every order */
+    /**
+     * Method return total price of goods in every order
+     */
     public static Integer getPriceOfSoldGoodsInOrder(Order order) {
         Integer price = 0;
         for (Integer goodId : order.getSoldGoods()) {
@@ -333,31 +354,37 @@ public class Main {
         return price;
     }
 
-    /** Method return number of total sold goods */
+    /**
+     * Method return number of total sold goods
+     */
     private static int getCountOfSoldGoods() {
         int count = 0;
-        for (Order order : orders) {
+        for (Order order : clientBasket.values()) {
             count += order.getSoldGoods().length;
         }
         return count;
     }
 
-    /** Method return order details with total price*/
+    /**
+     * Method return order details with total price
+     */
     private static String getOrderDetailsByClientId(Integer id) {
         String current = "";
         Integer totalPriceInOrder = 0;
-        for (Order order : orders) {
+        for (Order order : clientBasket.values()) {
             if (order.getId().equals(id)) {
                 for (int i = 0; i < order.getSoldGoods().length; i++) {
-                    current += getGoodById(order.getSoldGoods()[i])  + "\n";
+                    current += getGoodById(order.getSoldGoods()[i]) + "\n";
                 }
             }
         }
-        current += "Total price in order " + getPriceOfSoldGoodsInOrder(orders.get(id - 1));
+        current += "Total price in order " + getPriceOfSoldGoodsInOrder(clientBasket.get(id));
         return current;
     }
 
-    /** Method return name of the client by ID */
+    /**
+     * Method return name of the client by ID
+     */
     private static String getClientNameById(Integer id) {
         String current = null;
         for (Client client : clients) {
@@ -369,7 +396,9 @@ public class Main {
         return current;
     }
 
-    /** Return good information by ID */
+    /**
+     * Return good information by ID
+     */
     private static Good getGoodById(Integer id) {
         Good current = null;
         for (Good good : goods) {
@@ -381,11 +410,14 @@ public class Main {
         return current;
     }
 
-    /** Method checks if correct client login and password */
+    /**
+     * Method checks if correct client login and password
+     */
     private static void clientSecurityCheck(boolean isCorrectLogin, boolean isCorrectPassword, Scanner input) {
         String userLogin;
         String userPassword;
         boolean securityCheck = false;
+
         while (!securityCheck) {
             System.out.println("Enter your login: ");
             userLogin = input.next();
@@ -411,7 +443,9 @@ public class Main {
         }
     }
 
-    /** Method add information to our Lists */
+    /**
+     * Method add information to our Lists
+     */
     public static void initData() {
         // Staff
         employees.add(new Employee(1, "Administrator", 32));
@@ -431,7 +465,7 @@ public class Main {
         goods.add(new Good(4, "Nokia", "7 Plus", 7900, 5, TypeOfGoods.SMARTPHONE));
         goods.add(new Good(5, "LG", "Flatron", 3000, 2, TypeOfGoods.MONITOR));
         goods.add(new Good(6, "Samsung", "U Series", 3200, 3, TypeOfGoods.MONITOR));
-        goods.add(new Good(7, "Siemens", "Futjitsu", 10500, 2, TypeOfGoods.LAPTOP));
+        goods.add(new Good(7, "Siemens", "Fujitsu", 10500, 2, TypeOfGoods.LAPTOP));
         goods.add(new Good(8, "Apple", "MacBook", 19500, 2, TypeOfGoods.LAPTOP));
         goods.add(new Good(9, "Canon", "Pixma", 1600, 3, TypeOfGoods.PRINTER));
         goods.add(new Good(10, "HP", "SmartPrint", 1800, 3, TypeOfGoods.PRINTER));
@@ -440,14 +474,20 @@ public class Main {
         // Orders
         orders.add(new Order(1, 1, "21.03.2018", new Integer[]{1, 5, 9}, false));
         orders.add(new Order(2, 2, "28.03.2019", new Integer[]{2, 3, 7, 10}, false));
-        orders.add(new Order(3, 3, "30.02.2019", new Integer[]{1, 4, 8}, false));
+        orders.add(new Order(3, 3, "30.03.2019", new Integer[]{1, 4, 8}, false));
         orders.add(new Order(4, 4, "15.04.2018", new Integer[]{4, 4}, false));
         orders.add(new Order(5, 5, "07.01.2019", new Integer[]{6, 9, 11}, false));
 
+    }
 
-        /** Test Lesson 06 */
-        Map<Person, Order> orderMap = new HashMap<>();
-//        orderMap.put(new Person())
+    /**
+     * Map loading
+     */
+    public static Map<Integer, Order> addToMap(List<Order> orders) {
+        for (Order order : orders) {
+            clientBasket.put(order.getId(), order);
+        }
+        return clientBasket;
     }
 }
 
@@ -455,3 +495,8 @@ public class Main {
 // Зробити інтернет магазин, товар, каса, юзери можуть шось купити.
 // Товар має мати свою кількість і зменшується при купівлі.
 // Можна подивитись шо купили юзери. Має бути адмін. Все через консоль
+
+/**
+ * HomeWork06  Перебудувати консольний магазин таким чином, щоб в кожного користувача був свій кошик
+ * і кожен був пов"язаний з власним кошиком через мапу і весь функціонал зберігся
+ */
