@@ -1,7 +1,7 @@
 package lesson07HW;
 
-import lesson07HW.ArrayListLogic.ArrayListInterface;
-import lesson07HW.ArrayListLogic.MyArrayList;
+import lesson07HW.MyArrayList.ArrayListInterface;
+import lesson07HW.MyArrayList.MyArrayList;
 
 /**
  * Created by anton.sviatov on 08.08.2019.
