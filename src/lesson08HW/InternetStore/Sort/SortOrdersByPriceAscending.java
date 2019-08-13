@@ -1,8 +1,11 @@
-package lesson04HW.Sort;
+package lesson08HW.InternetStore.Sort;
 
-import lesson04HW.model.Order;
+import lesson08HW.InternetStore.model.Order;
+
 import java.util.Comparator;
-import static lesson04HW.Main.getPriceOfSoldGoodsInOrder;
+
+import static lesson08HW.InternetStore.Main.getPriceOfSoldGoodsInOrder;
+
 
 /**
  * Created by anton.sviatov on 30.07.2019.

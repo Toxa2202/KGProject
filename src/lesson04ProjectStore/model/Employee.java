@@ -1,4 +1,4 @@
-package lesson04HW.model;
+package lesson04ProjectStore.model;
 
 /**
  * Created by anton.sviatov on 24.07.2019.

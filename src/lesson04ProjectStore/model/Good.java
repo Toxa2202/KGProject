@@ -1,4 +1,4 @@
-package lesson04HW.model;
+package lesson04ProjectStore.model;
 
 import java.util.Objects;
 

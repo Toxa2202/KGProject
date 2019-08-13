@@ -1,4 +1,4 @@
-package lesson07HW.ArrayListLogic;
+package lesson07HW.MyArrayList;
 
 /**
  * Created by anton.sviatov on 08.08.2019.

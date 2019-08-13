@@ -1,4 +1,4 @@
-package lesson04HW.model;
+package lesson08HW.InternetStore.model;
 
 /**
  * Created by anton.sviatov on 25.07.2019.

@@ -1,4 +1,4 @@
-package lesson04HW.model;
+package lesson08HW.InternetStore.model;
 
 import java.util.Arrays;
 import java.util.Objects;

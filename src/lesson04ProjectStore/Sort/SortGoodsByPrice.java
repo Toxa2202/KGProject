@@ -1,6 +1,6 @@
-package lesson04HW.Sort;
+package lesson04ProjectStore.Sort;
 
-import lesson04HW.model.Good;
+import lesson04ProjectStore.model.Good;
 
 import java.util.Comparator;
 

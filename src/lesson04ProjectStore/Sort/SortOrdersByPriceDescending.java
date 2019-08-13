@@ -1,10 +1,10 @@
-package lesson04HW.Sort;
+package lesson04ProjectStore.Sort;
 
-import lesson04HW.model.Order;
+import lesson04ProjectStore.model.Order;
 
 import java.util.Comparator;
 
-import static lesson04HW.Main.getPriceOfSoldGoodsInOrder;
+import static lesson04ProjectStore.Main.getPriceOfSoldGoodsInOrder;
 
 /**
  * Created by anton.sviatov on 30.07.2019.

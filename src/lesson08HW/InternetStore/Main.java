@@ -1,10 +1,10 @@
-package lesson04HW;
+package lesson08HW.InternetStore;
 
-import lesson04HW.Sort.SortGoodsByModel;
-import lesson04HW.Sort.SortGoodsByPrice;
-import lesson04HW.Sort.SortOrdersByPriceAscending;
-import lesson04HW.Sort.SortOrdersByPriceDescending;
-import lesson04HW.model.*;
+import lesson08HW.InternetStore.Sort.SortGoodsByModel;
+import lesson08HW.InternetStore.Sort.SortGoodsByPrice;
+import lesson08HW.InternetStore.Sort.SortOrdersByPriceAscending;
+import lesson08HW.InternetStore.Sort.SortOrdersByPriceDescending;
+import lesson08HW.InternetStore.model.*;
 
 import java.util.*;
 

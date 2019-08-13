@@ -1,4 +1,4 @@
-package lesson07HW.ArrayListLogic;
+package lesson07HW.MyArrayList;
 
 import java.util.Arrays;
 import java.util.Iterator;
