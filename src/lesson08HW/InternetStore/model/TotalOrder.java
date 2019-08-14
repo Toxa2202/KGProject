@@ -1,11 +1,12 @@
 package lesson08HW.InternetStore.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by anton.sviatov on 26.07.2019.
  */
-public class TotalOrder {
+public class TotalOrder implements Serializable {
     private Integer orderId;
     private String name;
     private Date dateOfOrder;

@@ -1,12 +1,13 @@
 package lesson08HW.InternetStore.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * Created by anton.sviatov on 25.07.2019.
  */
-public class Order {
+public class Order implements Serializable {
     private Integer id;
     private Integer clientID;
     private String dateOfOrder;

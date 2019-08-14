@@ -3,7 +3,7 @@ package lesson08HW.InternetStore.model;
 /**
  * Created by anton.sviatov on 24.07.2019.
  */
-public class Client extends Person {
+public class Client extends Person{
 
     private String login;
     private String password;
@@ -28,5 +28,10 @@ public class Client extends Person {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Client " + super.toString();
     }
 }

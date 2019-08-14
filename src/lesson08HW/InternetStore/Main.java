@@ -6,6 +6,7 @@ import lesson08HW.InternetStore.Sort.SortOrdersByPriceAscending;
 import lesson08HW.InternetStore.Sort.SortOrdersByPriceDescending;
 import lesson08HW.InternetStore.model.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -20,18 +21,31 @@ public class Main {
     static List<TotalOrder> totalOrders = new ArrayList<>();
     public static Map<Integer, Order> clientBasket = new HashMap<>();
 
+    static List<Object> listFromFile = new ArrayList<>();
+
     private static String currentClientName;
     private static Integer currentClientId;
     private static String userLogin = "", userPassword = "";
     private static int userInput;
 
     /** Main method */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         boolean isCorrectLogin = false;
         boolean isCorrectPassword = false;
         Scanner input = new Scanner(System.in);
         initData();
         addToMap(orders);
+
+        saveDataToFile(orders, "orders");
+        saveDataToFile(clients, "clients");
+        saveDataToFile(goods, "goods");
+        saveDataToFile(clientBasket, "clientBasket");
+
+        listFromFile.add(readDataFromFile(clients, "clients"));
+        for (Object o: listFromFile) {
+            System.out.println(o);
+        } // todo dorobyty
+
 
         do {
             System.out.println("Welcome!" +
@@ -488,6 +502,27 @@ public class Main {
             clientBasket.put(order.getId(), order);
         }
         return clientBasket;
+    }
+
+    /** Save to File */
+    public static void saveDataToFile(Object o, String fileName) throws IOException {
+        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".txt");
+        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+        output.writeObject(o);
+        output.close();
+    }
+
+    /** Read from File */
+    public static List<Object> readDataFromFile(Object o, String fileName) throws IOException, ClassNotFoundException {
+        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".txt");
+        ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+        listFromFile = (List<Object>) input.readObject();
+        input.close();
+
+        return listFromFile;
+
+        /** Незавершений метод. Ідея - всі дані закидати в окремі файли, а потім
+         * зчитувати назад з них в відповідні нові лісти/мапи... */
     }
 }
 

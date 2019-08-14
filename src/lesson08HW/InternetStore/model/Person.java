@@ -1,9 +1,11 @@
 package lesson08HW.InternetStore.model;
 
+import java.io.Serializable;
+
 /**
  * Created by anton.sviatov on 25.07.2019.
  */
-public class Person {
+public class Person implements Serializable {
     private Integer id;
     private String name;
     private Integer age;
@@ -36,5 +38,12 @@ public class Person {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return  "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age;
     }
 }
