@@ -42,9 +42,8 @@ public class Main {
         saveDataToFile(clientBasket, "clientBasket");
 
         listFromFile.add(readDataFromFile(clients, "clients"));
-        for (Object o: listFromFile) {
-            System.out.println(o);
-        } // todo dorobyty
+        listFromFile.forEach(System.out::println);
+        // todo dorobyty
 
 
         do {
@@ -85,7 +84,7 @@ public class Main {
             }
             // choice 1
             if (clientChoice == 1) {
-                /** Goods Sorting Method */
+                /* Goods Sorting Method */
                 goodsSorting(input);
 
                 System.out.println("\t- To Add/Remove goods from your basket, press '2';" +
@@ -318,19 +317,13 @@ public class Main {
                 "\nTo sort Goods by Model, press '3': ");
         int sortChoose = input.nextInt();
         if (sortChoose == 1) {
-            for (Good good : goods) {
-                System.out.println(good);
-            }
+            goods.forEach(System.out::println);
         } else if (sortChoose == 2) {
-            Collections.sort(goods, new SortGoodsByPrice());
-            for (Good good : goods) {
-                System.out.println(good);
-            }
+            goods.sort(new SortGoodsByPrice());
+            goods.forEach(System.out::println);
         } else if (sortChoose == 3) {
-            Collections.sort(goods, new SortGoodsByModel());
-            for (Good good : goods) {
-                System.out.println(good);
-            }
+            goods.sort(new SortGoodsByModel());
+            goods.forEach(System.out::println);
         }
     }
 
@@ -372,11 +365,7 @@ public class Main {
      * Method return number of total sold goods
      */
     private static int getCountOfSoldGoods() {
-        int count = 0;
-        for (Order order : clientBasket.values()) {
-            count += order.getSoldGoods().length;
-        }
-        return count;
+        return clientBasket.values().stream().mapToInt(order -> order.getSoldGoods().length).sum();
     }
 
     /**
@@ -400,28 +389,15 @@ public class Main {
      * Method return name of the client by ID
      */
     private static String getClientNameById(Integer id) {
-        String current = null;
-        for (Client client : clients) {
-            if (client.getId() == id) {
-                current = client.getName();
-                break;
-            }
-        }
-        return current;
+        return clients.stream().filter(client ->
+                client.getId() == id).findFirst().map(Person::getName).orElse(null);
     }
 
     /**
      * Return good information by ID
      */
     private static Good getGoodById(Integer id) {
-        Good current = null;
-        for (Good good : goods) {
-            if (good.getId().equals(id)) {
-                current = good;
-                break;
-            }
-        }
-        return current;
+        return goods.stream().filter(good -> good.getId().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -537,5 +513,5 @@ public class Main {
  */
 
 // transient - to not serializating object. Обмежити видачу якихось даних. Позначаємо об"єкт трансіант -
-// і він не показуєтсья при видачі
+// і він не показуєтсья при видачі.
 
