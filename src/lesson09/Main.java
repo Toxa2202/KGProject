@@ -27,8 +27,8 @@ public class Main {
 //        switcher.addConsumer(new Lamp());
 //        switcher.addConsumer(new TV());
 //        switcher.addConsumer(() -> System.out.println("Laptop ON"));
-//                // anonim class, when is interface in enter. If use this once.
-//                // If functional interface have one method (like lambda)
+                // anonim class, when is interface in enter. If use this once.
+                // If functional interface have one method (like lambda)
 //        switcher.switchOn();
 
         List<Car> cars = new ArrayList<>();
@@ -83,5 +83,5 @@ public class Main {
 // фільтрування, сортування, перетворення мап, фор-іч,
 
 /** ДЗ
- *  Переписати все лямбдами в інтернет магазині
+ *  Переписати все лямбдами в інтернет проект
  * */
