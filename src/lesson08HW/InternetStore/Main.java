@@ -8,6 +8,7 @@ import lesson08HW.InternetStore.model.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * Created by anton.sviatov on 24.07.2019.
@@ -21,7 +22,10 @@ public class Main {
     static List<TotalOrder> totalOrders = new ArrayList<>();
     public static Map<Integer, Order> clientBasket = new HashMap<>();
 
-    static List<Object> listFromFile = new ArrayList<>();
+    static List<Object> clientsFromFile = new ArrayList<>();
+    static List<Object> ordersFromFile = new ArrayList<>();
+    static List<Object> goodsFromFile = new ArrayList<>();
+    static Map<Integer, Order> orderMap = new HashMap<>();
 
     private static String currentClientName;
     private static Integer currentClientId;
@@ -33,19 +37,16 @@ public class Main {
         boolean isCorrectLogin = false;
         boolean isCorrectPassword = false;
         Scanner input = new Scanner(System.in);
+
+        /* ------------------DATA INITIALIZATION ----------------*/
         initData();
-        addToMap(orders);
+        readFilesInit();
+        saveFileInit();
 
-        saveDataToFile(orders, "orders");
-        saveDataToFile(clients, "clients");
-        saveDataToFile(goods, "goods");
-        saveDataToFile(clientBasket, "clientBasket");
+        // Test read from file
+        clientsFromFile.stream().forEach(System.out::println);
 
-        listFromFile.add(readDataFromFile(clients, "clients"));
-        listFromFile.forEach(System.out::println);
-        // todo dorobyty
-
-
+        /* --------------- MENU Start Point --------------------*/
         do {
             System.out.println("Welcome!" +
                     "\n\t- To login as Administrator, press '1';" +
@@ -66,7 +67,6 @@ public class Main {
 
         System.out.println("Incorrect choice. Program is closing...");
     }
-
 
     /** Method operate with actions, if Client was connect ------------------------*/
     private static void clientActions(boolean isCorrectLogin, boolean isCorrectPassword, Scanner input) {
@@ -106,9 +106,7 @@ public class Main {
                     Integer lengthArray = clientBasket.get(currentClientId).getSoldGoods().length + 1;
                     Integer[] soldGoodsNew = new Integer[lengthArray];
                     Integer[] soldGoodsOld = clientBasket.get(currentClientId).getSoldGoods();
-                    for (int i = 0; i < soldGoodsOld.length; i++) {
-                        soldGoodsNew[i] = soldGoodsOld[i];
-                    }
+                    System.arraycopy(soldGoodsOld, 0, soldGoodsNew, 0, soldGoodsOld.length);
                     soldGoodsNew[soldGoodsNew.length - 1] = clientChoice;
                     // Update client order
                     clientBasket.get(currentClientId).setSoldGoods(soldGoodsNew);
@@ -291,9 +289,7 @@ public class Main {
                 System.out.println("To see updated list of goods, press '1' OR '0' to Exit: ");
                 userInput = input.nextInt();
                 if (userInput == 1) {
-                    for (Good good : goods) {
-                        System.out.println(good);
-                    }
+                    goods.forEach(System.out::println);
                 } else if (userInput == 0) {
                     System.exit(1);
                 }
@@ -372,17 +368,13 @@ public class Main {
      * Method return order details with total price
      */
     private static String getOrderDetailsByClientId(Integer id) {
-        String current = "";
+        StringBuilder current = new StringBuilder();
         Integer totalPriceInOrder = 0;
-        for (Order order : clientBasket.values()) {
-            if (order.getId().equals(id)) {
-                for (int i = 0; i < order.getSoldGoods().length; i++) {
-                    current += getGoodById(order.getSoldGoods()[i]) + "\n";
-                }
-            }
-        }
-        current += "Total price in order " + getPriceOfSoldGoodsInOrder(clientBasket.get(id));
-        return current;
+        clientBasket.values().stream().filter(order -> order.getId().equals(id)).
+                forEach(order -> IntStream.range(0, order.getSoldGoods().length)
+                .forEach(i -> current.append(getGoodById(order.getSoldGoods()[i])).append("\n")));
+        current.append("Total price in order ").append(getPriceOfSoldGoodsInOrder(clientBasket.get(id)));
+        return current.toString();
     }
 
     /**
@@ -390,7 +382,7 @@ public class Main {
      */
     private static String getClientNameById(Integer id) {
         return clients.stream().filter(client ->
-                client.getId() == id).findFirst().map(Person::getName).orElse(null);
+                client.getId().equals(id)).findFirst().map(Person::getName).orElse(null);
     }
 
     /**
@@ -438,17 +430,19 @@ public class Main {
      */
     public static void initData() {
         // Staff
+
+        // make read from file
         employees.add(new Employee(1, "Administrator", 32));
         employees.add(new Employee(2, "Client", 41));
 
-        // Clients
+        // Clients List
         clients.add(new Client(1, "Stiven Pupkin", 30, "user", "1111"));
         clients.add(new Client(2, "Eva Pupkina", 28, "user", "2222"));
         clients.add(new Client(3, "Bob Marley", 33, "user", "3333"));
         clients.add(new Client(4, "Donald Trump", 73, "user", "4444"));
         clients.add(new Client(5, "Ivo Bobul", 67, "user", "5555"));
 
-        // Good
+        // Good List
         goods.add(new Good(1, "Apple", "Iphone XR", 20900, 5, TypeOfGoods.SMARTPHONE));
         goods.add(new Good(2, "Samsung", "Galaxy S10", 18900, 3, TypeOfGoods.SMARTPHONE));
         goods.add(new Good(3, "Huawei", "P30", 17900, 3, TypeOfGoods.SMARTPHONE));
@@ -461,44 +455,66 @@ public class Main {
         goods.add(new Good(10, "HP", "SmartPrint", 1800, 3, TypeOfGoods.PRINTER));
         goods.add(new Good(11, "Epson", "AllInOne", 2500, 2, TypeOfGoods.PRINTER));
 
-        // Orders
-        orders.add(new Order(1, 1, "21.03.2018", new Integer[]{1, 5, 9}, false));
-        orders.add(new Order(2, 2, "28.03.2019", new Integer[]{2, 3, 7, 10}, false));
-        orders.add(new Order(3, 3, "30.03.2019", new Integer[]{1, 4, 8}, false));
-        orders.add(new Order(4, 4, "15.04.2018", new Integer[]{4, 4}, false));
-        orders.add(new Order(5, 5, "07.01.2019", new Integer[]{6, 9, 11}, false));
+        // Orders Map
+        clientBasket.put(1, new Order(1, 1, "21.03.2018", new Integer[]{1, 5, 9}, false));
+        clientBasket.put(2, new Order(2, 2, "28.03.2019", new Integer[]{2, 3, 7, 10}, false));
+        clientBasket.put(3, new Order(3, 3, "30.03.2019", new Integer[]{1, 4, 8}, false));
+        clientBasket.put(4, new Order(4, 4, "15.04.2018", new Integer[]{4, 4}, false));
+        clientBasket.put(5, new Order(5, 5, "07.01.2019", new Integer[]{6, 9, 11}, false));
 
     }
 
-    /**
-     * Map loading
-     */
-    public static Map<Integer, Order> addToMap(List<Order> orders) {
-        for (Order order : orders) {
-            clientBasket.put(order.getId(), order);
-        }
-        return clientBasket;
+    private static void saveFileInit() throws IOException {
+        saveDataToFile(orders, "orders");
+        saveDataToFile(clients, "clients");
+        saveDataToFile(goods, "goods");
+        saveDataToFile(clientBasket, "clientBasket");
+    }
+
+    private static void readFilesInit() throws IOException, ClassNotFoundException {
+        orderMap = readMapFromFile("clientBasket");
+        goodsFromFile.add(readDataFromFile("goods"));
+        clientsFromFile.add(readDataFromFile("clients"));
+        ordersFromFile.add(readDataFromFile("clients"));
     }
 
     /** Save to File */
     public static void saveDataToFile(Object o, String fileName) throws IOException {
-        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".txt");
-        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
-        output.writeObject(o);
-        output.close();
+        File tempFile = new File("src/lesson08HW/InternetStore/" + fileName + ".dat");
+        if (!tempFile.exists()) {
+            File file = new File("src/lesson08HW/InternetStore/" + fileName + ".dat");
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(file));
+            output.writeObject(o);
+            output.close();
+        } else {
+            ObjectOutputStream output = new ObjectOutputStream(
+                    new FileOutputStream("src/lesson08HW/InternetStore/" + fileName + ".dat"));
+            output.writeObject(o);
+            output.close();
+        }
     }
 
     /** Read from File */
-    public static List<Object> readDataFromFile(Object o, String fileName) throws IOException, ClassNotFoundException {
-        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".txt");
+    public static List<Object> readDataFromFile(String fileName) throws IOException, ClassNotFoundException {
+        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".dat");
         ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
-        listFromFile = (List<Object>) input.readObject();
+        clientsFromFile = (List<Object>) input.readObject();
         input.close();
 
-        return listFromFile;
+        return clientsFromFile;
 
         /** Незавершений метод. Ідея - всі дані закидати в окремі файли, а потім
          * зчитувати назад з них в відповідні нові лісти/мапи... */
+    }
+
+    /** Read from File */
+    public static Map<Integer, Order> readMapFromFile(String fileName) throws IOException, ClassNotFoundException {
+        File file = new File("src/lesson08HW/InternetStore/" + fileName + ".dat");
+        ObjectInputStream input = new ObjectInputStream(new FileInputStream(file));
+        orderMap = (Map<Integer, Order>) input.readObject();
+        input.close();
+
+        return orderMap;
     }
 }
 
