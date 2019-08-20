@@ -20,7 +20,6 @@ public class Main {
 //        }
 //    }
 
-
     public static void main(String[] args) {
 
 //        Switcher switcher = new Switcher();
@@ -73,8 +72,6 @@ public class Main {
         cars.stream().filter(car -> car.getPower() > 250)
                 .sorted(Comparator.comparing(Car::getPower))
                 .forEach(System.out::println);
-
-
     }
 }
 
