@@ -381,15 +381,16 @@ public class Main {
      * Method return name of the client by ID
      */
     private static String getClientNameById(Integer id) {
-        return clients.stream().filter(client ->
-                client.getId().equals(id)).findFirst().map(Person::getName).orElse(null);
+        return clients.stream().filter(client -> client.getId().equals(id))
+                .findFirst().map(Person::getName).orElse(null);
     }
 
     /**
      * Return good information by ID
      */
     private static Good getGoodById(Integer id) {
-        return goods.stream().filter(good -> good.getId().equals(id)).findFirst().orElse(null);
+        return goods.stream().filter(good -> good.getId().equals(id))
+                .findFirst().orElse(null);
     }
 
     /**
@@ -530,4 +531,3 @@ public class Main {
 
 // transient - to not serializating object. Обмежити видачу якихось даних. Позначаємо об"єкт трансіант -
 // і він не показуєтсья при видачі.
-
