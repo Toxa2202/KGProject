@@ -16,7 +16,6 @@ public class PerfectNumberFinder {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-//                System.out.println("TimerTask executing counter is: " + counter);
                 counter++;
             }
         };
@@ -25,7 +24,7 @@ public class PerfectNumberFinder {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                     System.out.println("Thread reading counter is: " + counter + " sec");
+                     System.out.println("\tThread counter is: " + counter + " sec");
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();

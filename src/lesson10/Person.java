@@ -36,7 +36,6 @@ public class Person implements Reflect {
                 '}';
     }
 
-
 }
 
 // Reflection - кодом працюємо з кодом
