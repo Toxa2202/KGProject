@@ -12,50 +12,52 @@ import java.lang.reflect.Parameter;
  */
 public class Main {
     public static void main(String[] args) throws IllegalAccessException, NoSuchFieldException {
-//        Person person = new Person("David", 22);
-//        // Reflection starts here
-//        Class classPerson = person.getClass();
-//        System.out.println(classPerson.getName());
-//        System.out.println(classPerson.getSuperclass().getName());
-//        // Get list of interfaces
-//        for (Class interfaces: classPerson.getInterfaces()) {
-//            System.out.println(interfaces.getName());
-//        }
-////
-////        for (Field field: classPerson.getFields()) {
-////            System.out.println(field.getType() + " " + field.getName() + " " + field.get(person));
-////        }
-////
-////        for (Field field: classPerson.getDeclaredFields()) {
-////            field.setAccessible(true);
-////            System.out.println(field.getType() + " " + field.getName() + " " + field.get(person));
-////        }
-////
-////        // Порушили інкапсуляцію. Переписали на Остапа ім"я
-////        System.out.println(person);
-////        Field field = classPerson.getDeclaredField("name");
-////        field.setAccessible(true);
-////        field.set(person, "Ostap");
-////
-////        System.out.println(person);
-//
-//
-//        // get count of constructors
-//        for (Constructor constructor : classPerson.getConstructors()) {
-//            System.out.println(constructor.getParameterCount());
-//
-//            for (Parameter parameter : constructor.getParameters()) {
-//                System.out.println(parameter.getType() + " " + parameter.getName());
-//
-//            }
-//        }
-//
-//        for (Method method : classPerson.getMethods()) {
-//            System.out.println(method.getName());
-//            for (Parameter parameter : method.getParameters()) {
-//                System.out.println(parameter.getType() + " " + parameter.getName());
-//            }
-//        }
+        Person person = new Person("David", 22);
+        // Reflection starts here
+        Class classPerson = person.getClass();
+        System.out.println(classPerson.getName());
+        System.out.println(classPerson.getSuperclass().getName());
+        // Get list of interfaces
+        for (Class interfaces: classPerson.getInterfaces()) {
+            System.out.println(interfaces.getName());
+        }
+
+        // Does not have access to fields
+        for (Field field: classPerson.getFields()) {
+            System.out.println(field.getType() + " " + field.getName() + " " + field.get(person));
+        }
+
+        // Has access to fields
+        for (Field field: classPerson.getDeclaredFields()) {
+            field.setAccessible(true);
+            System.out.println(field.getType() + " " + field.getName() + " " + field.get(person));
+        }
+
+        // Порушили інкапсуляцію. Переписали на Остапа ім"я
+        System.out.println(person);
+        Field field = classPerson.getDeclaredField("name");
+        field.setAccessible(true);
+        field.set(person, "Ostap");
+
+        System.out.println(person);
+
+
+        // get count of constructors
+        for (Constructor constructor : classPerson.getConstructors()) {
+            System.out.println(constructor.getParameterCount());
+
+            for (Parameter parameter : constructor.getParameters()) {
+                System.out.println(parameter.getType() + " " + parameter.getName());
+
+            }
+        }
+
+        for (Method method : classPerson.getMethods()) {
+            System.out.println(method.getName());
+            for (Parameter parameter : method.getParameters()) {
+                System.out.println(parameter.getType() + " " + parameter.getName());
+            }
+        }
 
 
         /* Multithreading starts */
@@ -81,5 +83,6 @@ public class Main {
 // Пріоритет запуску залежить від консолі. Вона сама вибирає який потік запускаєтсья першим.
 // Biggest problem is synchronization
 
+// HW
 // В одному потоці секундомір
 // В іншому потоці алгоритм - вирахувати прості числа
